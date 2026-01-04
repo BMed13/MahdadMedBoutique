@@ -115,6 +115,28 @@ button:hover,
   color: #777;
 }
 
+/* LOGIN PAGE */
+.login-card {
+  max-width: 400px;
+  margin: auto;
+}
+
+.login-card h2 {
+  margin-bottom: 20px;
+}
+
+.login-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.error-message {
+  color: #e74c3c;
+  font-size: 14px;
+  text-align: center;
+}
+
 /* RESPONSIVE */
 @media (max-width: 768px) {
   .admin-header {
