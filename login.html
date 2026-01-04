@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Connexion Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header">
+  <h1>🔐 Accès Administrateur</h1>
+  <p>Connexion sécurisée</p>
+</header>
+
+<main class="container">
+  <div class="card login-card">
+
+    <h2>Connexion</h2>
+
+    <form id="loginForm">
+
+      <input
+        id="email"
+        type="email"
+        placeholder="Email administrateur"
+        required
+      >
+
+      <input
+        id="password"
+        type="password"
+        placeholder="Mot de passe"
+        required
+      >
+
+      <button type="submit">Se connecter</button>
+
+      <p id="error" class="error-message"></p>
+
+    </form>
+
+  </div>
+</main>
+
+<footer class="footer">
+  <p>© 2026 PhoneShop – Admin</p>
+</footer>
+
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+
+<script>
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const errorText = document.getElementById("error");
+  errorText.textContent = "";
+
+  const { error } = await supabaseClient.auth.signInWithPassword({
+    email: email.value,
+    password: password.value
+  });
+
+  if (error) {
+    errorText.textContent = "Email ou mot de passe incorrect";
+  } else {
+    window.location.href = "admin.html";
+  }
+});
+</script>
+
+</body>
+</html>
