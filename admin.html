@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin – Produits</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header admin-header">
+  <h1>🔐 Admin – Gestion Produits</h1>
+  <button id="logout" class="btn-logout">Déconnexion</button>
+</header>
+
+<main class="container">
+
+  <section class="admin-form">
+    <h2>Ajouter un téléphone</h2>
+
+    <form id="productForm">
+      <input id="name" placeholder="Nom du téléphone" required>
+      <input id="price" placeholder="Prix (DA)" required>
+      <input id="image" placeholder="URL de l'image" required>
+      <textarea id="description" placeholder="Description"></textarea>
+      <button type="submit">Ajouter le produit</button>
+    </form>
+  </section>
+
+  <section>
+    <h2>Produits existants</h2>
+    <div class="grid" id="adminProducts"></div>
+  </section>
+
+</main>
+
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+
+<!-- Protection Admin -->
+<script>
+(async () => {
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (!session) {
+    window.location.href = "login.html";
+  }
+})();
+</script>
+
+<script>
+// Charger produits
+async function loadAdminProducts() {
+  const { data } = await supabaseClient.from("products").select("*");
+  const container = document.getElementById("adminProducts");
+  container.innerHTML = "";
+
+  data.forEach(p => {
+    container.innerHTML += `
+      <div class="card small">
+        <img src="${p.image_url}">
+        <h3>${p.name}</h3>
+        <strong>${p.price} DA</strong>
+      </div>
+    `;
+  });
+}
+
+loadAdminProducts();
+
+// Ajouter produit
+document.getElementById("productForm").addEventListener("submit", async e => {
+  e.preventDefault();
+
+  const { error } = await supabaseClient.from("products").insert({
+    name: name.value,
+    price: price.value,
+    image_url: image.value,
+    description: description.value
+  });
+
+  if (error) {
+    alert("Erreur ajout produit");
+    console.error(error);
+  } else {
+    alert("Produit ajouté");
+    e.target.reset();
+    loadAdminProducts();
+  }
+});
+
+// Déconnexion
+document.getElementById("logout").addEventListener("click", async () => {
+  await supabaseClient.auth.signOut();
+  window.location.href = "login.html";
+});
+</script>
+
+</body>
+</html>
