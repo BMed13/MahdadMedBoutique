@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Boutique Téléphones</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header">
+  <h1>📱 PhoneShop</h1>
+  <p>Les meilleurs téléphones au meilleur prix</p>
+</header>
+
+<main class="container">
+  <div class="grid" id="products"></div>
+</main>
+
+<footer class="footer">
+  <p>© 2026 PhoneShop – Commande via WhatsApp</p>
+</footer>
+
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+
+<script>
+async function loadProducts() {
+  const { data, error } = await supabaseClient
+    .from("products")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  const container = document.getElementById("products");
+  container.innerHTML = "";
+
+  data.forEach(p => {
+    container.innerHTML += `
+      <div class="card">
+        <img src="${p.image_url}" alt="${p.name}">
+        <h3>${p.name}</h3>
+        <p class="desc">${p.description || ""}</p>
+        <strong class="price">${p.price} DA</strong>
+        <a 
+          href="https://wa.me/213XXXXXXXXX?text=Bonjour, je veux commander ${p.name}"
+          target="_blank"
+          class="btn-whatsapp"
+        >
+          Commander WhatsApp
+        </a>
+      </div>
+    `;
+  });
+}
+
+loadProducts();
+</script>
+
+</body>
+</html>
